@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Near or Far?</title>
+<!--
+  Source for Near_or_Far_Tutorial.pdf.
+  Rebuild the PDF from this folder with Edge (see README.md in the repo root).
+  No screenshots on purpose, so students build their own map. The cover
+  picture is an inline SVG diagram.
+-->
+<style>
+  /* margin: 0 stops Edge from printing its own header and footer */
+  @page { size: A4; margin: 0; }
+
+  :root {
+    --blue: #2563eb;
+    --blue-dark: #1d4ed8;
+    --ink: #111827;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #d1d5db;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Verdana, Arial, sans-serif;
+    color: var(--text);
+    font-size: 11.5pt;
+    line-height: 1.6;
+  }
+
+  /* One A4 sheet per section */
+  .page {
+    width: 210mm;
+    height: 297mm;
+    padding: 18mm 18mm 16mm;
+    page-break-after: always;
+    overflow: hidden;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* Cover */
+  .cover { text-align: center; }
+  .kicker {
+    color: var(--blue);
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 10.5pt;
+    margin-top: 2mm;
+  }
+  .cover h1 { font-size: 32pt; color: var(--ink); margin: 3mm 0 1mm; line-height: 1.2; }
+  .subtitle { color: #4b5563; font-size: 13pt; margin: 0 0 8mm; }
+  .cover-figure { margin: 0 0 10mm; }
+  .cover .shot {
+    width: 100%;
+    max-height: none;
+    border: 4px solid var(--ink);
+    border-radius: 6px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  }
+  .cover .callout { text-align: left; }
+
+  /* Headings */
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 4mm;
+    font-size: 19pt;
+    color: var(--ink);
+    margin: 0 0 6mm;
+    padding-bottom: 3mm;
+    border-bottom: 3px solid var(--blue);
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 10mm;
+    height: 10mm;
+    border-radius: 50%;
+    background: var(--blue);
+    color: white;
+    font-size: 14pt;
+  }
+  h3 { font-size: 14pt; color: var(--ink); margin: 8mm 0 4mm; }
+  ol, ul { padding-left: 7mm; }
+  li { margin-bottom: 2mm; }
+  code {
+    font-family: Consolas, monospace;
+    font-size: 10.5pt;
+    background: #f3f4f6;
+    padding: 0 1.5mm;
+    border-radius: 3px;
+  }
+
+  /* Screenshots and placeholders */
+  figure { margin: 5mm 0; }
+  .shot {
+    display: block;
+    width: 100%;
+    max-height: 105mm;
+    object-fit: contain;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+  }
+  figcaption {
+    text-align: center;
+    font-style: italic;
+    color: var(--muted);
+    font-size: 10pt;
+    margin-top: 2mm;
+  }
+
+  /* Callout boxes */
+  .callout {
+    border-left: 5px solid;
+    border-radius: 6px;
+    padding: 3mm 5mm;
+    margin: 4mm 0;
+    font-size: 10.5pt;
+  }
+  .callout .label {
+    display: block;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 9pt;
+  }
+  .word { background: #fef3c7; border-color: #d97706; }
+  .word .label { color: #92400e; }
+  .fact { background: #ecfdf5; border-color: #059669; }
+  .fact .label { color: #047857; }
+  .tip  { background: #eff6ff; border-color: var(--blue); }
+  .tip .label { color: var(--blue-dark); }
+  .uses { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 4mm 6mm; }
+  .uses .label { color: var(--blue-dark); text-transform: none; letter-spacing: 0; font-size: 11pt; }
+  .uses ul { margin: 2mm 0 0; }
+
+  /* Style table */
+  table { width: 100%; border-collapse: collapse; font-size: 10.5pt; margin: 4mm 0; }
+  th, td { border: 1px solid var(--border); padding: 2mm 3mm; text-align: left; }
+  th { background: #f3f4f6; }
+
+  /* Recap page */
+  .learned { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+  .learned div {
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
+    border-radius: 6px;
+    padding: 3mm 4mm;
+    font-size: 10.5pt;
+  }
+  .learned b { color: var(--blue); }
+  .try {
+    margin-top: 6mm;
+    border: 2px dashed #a855f7;
+    background: #fdf4ff;
+    border-radius: 8px;
+    padding: 4mm 6mm;
+  }
+  .try h3 { color: #7e22ce; margin: 0 0 2mm; }
+  .footer-note { text-align: right; color: #9ca3af; font-size: 9pt; margin-top: 5mm; }
+  /* Cover diagram */
+  .cover .diagram {
+    display: block;
+    width: 100%;
+    border: 4px solid var(--ink);
+    border-radius: 6px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  }
+
+  /* Blank worksheet table for students to fill in */
+  .worksheet td { height: 16mm; }
+</style>
+</head>
+<body>
+
+<!-- Cover -->
+<section class="page cover">
+  <div class="kicker">A GIS Adventure: Exercise 3</div>
+  <h1>Near or Far?</h1>
+  <p class="subtitle">Draw distance zones and ask your map a question, using GeoLibre</p>
+
+  <figure class="cover-figure">
+    <svg class="diagram" viewBox="0 0 400 300" role="img" aria-label="A city with two distance rings around it and places inside and outside the rings">
+      <rect x="0" y="0" width="400" height="300" fill="#f8fafc"/>
+      <circle cx="200" cy="150" r="125" fill="#2563eb" fill-opacity="0.06" stroke="#2563eb" stroke-width="2" stroke-dasharray="6 5"/>
+      <circle cx="200" cy="150" r="65" fill="#2563eb" fill-opacity="0.15" stroke="#2563eb" stroke-width="2.5"/>
+      <text x="200" y="77" text-anchor="middle" font-size="12" fill="#1d4ed8" font-weight="700">400 km</text>
+      <text x="200" y="18" text-anchor="middle" font-size="12" fill="#1d4ed8" font-weight="700">600 km</text>
+      <!-- places inside the small ring -->
+      <circle cx="170" cy="130" r="7" fill="#059669" stroke="white" stroke-width="2"/>
+      <circle cx="232" cy="172" r="7" fill="#059669" stroke="white" stroke-width="2"/>
+      <!-- places between the rings -->
+      <circle cx="105" cy="200" r="7" fill="#d97706" stroke="white" stroke-width="2"/>
+      <circle cx="290" cy="95" r="7" fill="#d97706" stroke="white" stroke-width="2"/>
+      <!-- places outside -->
+      <circle cx="40" cy="60" r="7" fill="#9ca3af" stroke="white" stroke-width="2"/>
+      <circle cx="365" cy="250" r="7" fill="#9ca3af" stroke="white" stroke-width="2"/>
+      <circle cx="350" cy="40" r="7" fill="#9ca3af" stroke="white" stroke-width="2"/>
+      <!-- the city -->
+      <circle cx="200" cy="150" r="9" fill="#111827" stroke="white" stroke-width="2.5"/>
+      <text x="214" y="146" font-size="13" font-weight="700" fill="#111827">My city</text>
+    </svg>
+    <figcaption>Which places are close to your city, and which are far away?</figcaption>
+  </figure>
+
+  <div class="callout uses">
+    <span class="label">What you'll use</span>
+    <ul>
+      <li><b>GeoLibre</b>: the same free, web-based GIS tool from Exercises 1 and 2</li>
+      <li><b>my_city.csv</b>: a one-row table that you will change to your own city</li>
+      <li><b>famous_places.csv</b>: the 16 famous places from Exercise 2</li>
+      <li><b>india_boundary.geojson</b>: the outline of India, from Exercise 1</li>
+    </ul>
+  </div>
+</section>
+
+<!-- Intro -->
+<section class="page">
+  <h2>Maps Can Answer Questions</h2>
+  <p>So far you've used GIS to <b>draw</b> maps. But the real superpower of GIS is
+    <b>asking questions</b> and getting answers from the map.</p>
+  <p>Today's question is: <b>"Which famous places are near my city?"</b> To answer it,
+    you'll draw zones of a fixed distance around your city, then ask GeoLibre to find
+    every famous place that falls inside them. Everyone in your class can pick a
+    different city, so everyone gets a different answer!</p>
+
+  <div class="callout word">
+    <span class="label">GIS word of the day</span>
+    <b>Spatial analysis</b>: using a map to answer a question about <i>where</i>
+    things are, like "what is close to what?" or "what is inside what?"
+  </div>
+
+  <div class="callout fact">
+    <span class="label">Fun fact</span>
+    Real people use these tools every day. Ambulance services check which hospitals are
+    closest, and city planners check which homes are near a new school or park.
+  </div>
+
+  <p>Here's the plan for today, in seven steps:</p>
+  <ol>
+    <li>Set up your map</li>
+    <li>Choose your city</li>
+    <li>Draw a 400 km zone around it</li>
+    <li>Make the zone see-through</li>
+    <li>Ask the map: which places are inside?</li>
+    <li>Count and compare with bigger zones</li>
+    <li>Make a layout and export your map</li>
+  </ol>
+</section>
+
+<!-- Step 1 -->
+<section class="page">
+  <h2><span class="badge">1</span> Set Up Your Map</h2>
+  <p>Start with everything you already know how to do.</p>
+  <ol>
+    <li>Open GeoLibre and click <b>Launch GeoLibre Web</b>.</li>
+    <li>Add <b>india_boundary.geojson</b> with <b>Add Data</b> &rarr; <b>Vector Layer</b>.
+      Give it a transparent fill and a dark outline.</li>
+    <li>Add <b>famous_places.csv</b> with <b>Add Data</b> &rarr;
+      <b>Delimited Text Layer</b>, using <code>longitude</code> and
+      <code>latitude</code> for the coordinates.</li>
+    <li>Label the places with their <code>name</code>, so you can tell them apart.</li>
+  </ol>
+
+  <div class="callout tip">
+    <span class="label">Tip</span>
+    Stuck? Exercise 1 shows how to add and style the India outline, and Exercise 2
+    shows how to load a CSV and add labels.
+  </div>
+</section>
+
+<!-- Step 2 -->
+<section class="page">
+  <h2><span class="badge">2</span> Choose Your City</h2>
+  <p>Every analysis needs a starting point. Yours will be a city you choose.</p>
+  <ol>
+    <li>Decide on your city. It could be where you live, where your grandparents live,
+      or a city you'd love to visit.</li>
+    <li>In GeoLibre, find your city on the map, <b>right-click</b> on it, and copy the
+      coordinate.</li>
+    <li>Open <b>my_city.csv</b> in Notepad. It looks like this:
+      <br><code>name,latitude,longitude</code>
+      <br><code>Bangalore,12.9716,77.5946</code></li>
+    <li>Change the second line to your city's name, latitude, and longitude. Save the file.</li>
+    <li>Load it with <b>Add Data</b> &rarr; <b>Delimited Text Layer</b>. Make its dot big
+      and bold so it stands out from the famous places.</li>
+  </ol>
+
+  <div class="callout tip">
+    <span class="label">Tip</span>
+    Watch the order! The copied coordinate may come as longitude first, then latitude.
+    Latitudes in India are between about 8 and 37. Longitudes are between about 68
+    and 97. If your dot lands in the sea or another country, try swapping the two numbers.
+  </div>
+</section>
+
+<!-- Step 3 -->
+<section class="page">
+  <h2><span class="badge">3</span> Draw a 400 km Zone</h2>
+  <p>Now let's draw a circle that covers everything within 400 km of your city.</p>
+  <ol>
+    <li>Open <b>Processing</b> &rarr; <b>GeoLibre Toolbox</b> &rarr; <b>Vector</b>, and
+      choose <b>Buffer</b>.</li>
+    <li>Set the input layer to <i>my_city</i>.</li>
+    <li>Set the distance to <b>400</b> kilometres. Check the unit carefully!</li>
+    <li>Click <b>Run</b>. A new layer appears: a big circle around your city.</li>
+    <li>Rename the new layer to something clear, like <i>zone_400km</i>.</li>
+  </ol>
+
+  <div class="callout word">
+    <span class="label">GIS word of the day</span>
+    <b>Buffer</b>: a zone drawn around something at a fixed distance. A buffer around a
+    point is a circle. A buffer around a river would be a long, wiggly band.
+  </div>
+
+  <div class="callout fact">
+    <span class="label">Fun fact</span>
+    400 km is roughly a 7 to 8 hour car journey, or about an hour in a plane. Your zone
+    shows everywhere you could reach "as the crow flies" with that much distance.
+  </div>
+</section>
+
+<!-- Step 4 -->
+<section class="page">
+  <h2><span class="badge">4</span> Make the Zone See-Through</h2>
+  <p>Right now the zone may cover up the famous places underneath it. Let's fix that.</p>
+  <ol>
+    <li>Select the <i>zone_400km</i> layer and open the <b>Style</b> panel.</li>
+    <li>Pick a fill colour you like, and turn the <b>fill opacity</b> down low, so the
+      zone is see-through like tinted glass.</li>
+    <li>Give the zone a stronger <b>stroke</b> (outline) in the same colour, so its edge
+      is easy to see.</li>
+    <li>In the Layers panel, drag the zone <b>below</b> <i>famous_places</i> and
+      <i>my_city</i>, so the dots sit on top.</li>
+  </ol>
+
+  <div class="callout word">
+    <span class="label">GIS word of the day</span>
+    <b>Opacity</b>: how solid a colour is. 100% opacity is completely solid; 0% is
+    completely invisible. Somewhere in between lets you see through it.
+  </div>
+</section>
+
+<!-- Step 5 -->
+<section class="page">
+  <h2><span class="badge">5</span> Ask the Map: Which Places Are Inside?</h2>
+  <p>You could count the dots by eye, but GIS can do it for you, perfectly, every time.</p>
+  <ol>
+    <li>Open <b>Processing</b> &rarr; <b>GeoLibre Toolbox</b> &rarr; <b>Vector</b>, and
+      choose <b>Select by location</b>.</li>
+    <li>Set the input layer to <i>famous_places</i>. These are the things we want to find.</li>
+    <li>Set the overlay layer to <i>zone_400km</i>. This is the area we're searching in.</li>
+    <li>Set the relationship to <b>within</b>.</li>
+    <li>Click <b>Run</b>. The famous places inside your zone are now selected and
+      highlighted on the map.</li>
+  </ol>
+
+  <div class="callout word">
+    <span class="label">GIS word of the day</span>
+    <b>Spatial query</b>: a question you ask a map using location, like "which places
+    are <i>within</i> this zone?" It works just like a search, but for places.
+  </div>
+
+  <div class="callout tip">
+    <span class="label">Tip</span>
+    If nothing is selected, that's an answer too! It means no famous places are within
+    400 km of your city. Bigger zones in the next step will catch some.
+  </div>
+</section>
+
+<!-- Step 6 -->
+<section class="page">
+  <h2><span class="badge">6</span> Count and Compare</h2>
+  <p>Let's see how the answer changes as the zone grows.</p>
+  <ol>
+    <li>Open the attribute table for <i>famous_places</i>. The status bar shows how many
+      places are selected. Switch to <b>Show Selected</b> to see their names.</li>
+    <li>Write the number and the names in the table below.</li>
+    <li>Repeat Steps 3 and 5 with a <b>600 km</b> zone, and then a <b>1000 km</b> zone.</li>
+  </ol>
+
+  <table class="worksheet">
+    <tr><th style="width:22%">Zone size</th><th style="width:22%">How many places?</th><th>Which places?</th></tr>
+    <tr><td>400 km</td><td></td><td></td></tr>
+    <tr><td>600 km</td><td></td><td></td></tr>
+    <tr><td>1000 km</td><td></td><td></td></tr>
+  </table>
+
+  <p>My city: ______________________ &nbsp;&nbsp; Closest famous place: ______________________</p>
+
+  <div class="callout fact">
+    <span class="label">Fun fact</span>
+    India measures about 3,200 km from north to south. Even a 1000 km zone covers only
+    part of the country. How many 1000 km zones would it take to cover all of India?
+  </div>
+</section>
+
+<!-- Step 7 -->
+<section class="page">
+  <h2><span class="badge">7</span> Make a Layout and Export</h2>
+  <p>Show off your answer with a finished map.</p>
+  <ol>
+    <li>Turn on all three zones, with the biggest at the bottom of the Layers panel and
+      the smallest just under the dots. Give each one a different colour.</li>
+    <li>Open <b>Project</b> &rarr; <b>Print Layout...</b></li>
+    <li>Use a title like <b>"Famous Places Near [your city]"</b>.</li>
+    <li>Turn on the <b>legend</b>, <b>north arrow</b>, and <b>scale bar</b>.</li>
+    <li>Export your map as a <b>PNG</b> or <b>PDF</b>.</li>
+  </ol>
+
+  <div class="callout tip">
+    <span class="label">Tip</span>
+    Look at the scale bar on your exported map. Does the 400 km ring really look about
+    400 km from your city? This is a good way to check your work.
+  </div>
+</section>
+
+<!-- Recap -->
+<section class="page">
+  <h2>You Did Real Spatial Analysis!</h2>
+  <p>You asked a question, used GIS tools to find the answer, and made a map to share it.
+    That's exactly what professional GIS analysts do.</p>
+
+  <h3>What You Learned</h3>
+  <div class="learned">
+    <div>Using a map to answer questions with <b>spatial analysis</b></div>
+    <div>Creating your own point from <b>coordinates</b></div>
+    <div>Drawing distance zones with a <b>buffer</b></div>
+    <div>Making layers see-through with <b>opacity</b></div>
+    <div>Finding places inside a zone with a <b>spatial query</b></div>
+    <div>Comparing results as the zone gets bigger</div>
+  </div>
+
+  <div class="try">
+    <h3>Try It Yourself</h3>
+    <ul>
+      <li>Compare your table with a friend who picked a different city. Whose city has
+        the most famous places nearby?</li>
+      <li>Buffer <b>every</b> famous place by 100 km. Which zones overlap? Which place
+        is the "loneliest", with no other place nearby?</li>
+      <li>Try a tiny zone, like 20 km. Which places are practically next door to each other?</li>
+      <li>Think of a real question you could answer with a buffer, like "which schools
+        are within 2 km of my home?"</li>
+    </ul>
+  </div>
+
+  <p class="footer-note">Made with GeoLibre &middot; mapping_with_kids / exercise3</p>
+</section>
+
+</body>
+</html>

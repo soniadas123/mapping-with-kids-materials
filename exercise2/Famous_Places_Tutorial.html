@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Famous Places of India</title>
+<!--
+  Source for Famous_Places_Tutorial.pdf.
+  Rebuild the PDF from this folder with Edge (see README.md in the repo root).
+  The only image is screenshot/s2.png on the cover. Steps have no
+  screenshots on purpose, so students build their own map.
+-->
+<style>
+  /* margin: 0 stops Edge from printing its own header and footer */
+  @page { size: A4; margin: 0; }
+
+  :root {
+    --blue: #2563eb;
+    --blue-dark: #1d4ed8;
+    --ink: #111827;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #d1d5db;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Verdana, Arial, sans-serif;
+    color: var(--text);
+    font-size: 11.5pt;
+    line-height: 1.6;
+  }
+
+  /* One A4 sheet per section */
+  .page {
+    width: 210mm;
+    height: 297mm;
+    padding: 18mm 18mm 16mm;
+    page-break-after: always;
+    overflow: hidden;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* Cover */
+  .cover { text-align: center; }
+  .kicker {
+    color: var(--blue);
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 10.5pt;
+    margin-top: 2mm;
+  }
+  .cover h1 { font-size: 32pt; color: var(--ink); margin: 3mm 0 1mm; line-height: 1.2; }
+  .subtitle { color: #4b5563; font-size: 13pt; margin: 0 0 8mm; }
+  .cover-figure { margin: 0 0 10mm; }
+  .cover .shot {
+    width: 100%;
+    max-height: none;
+    border: 4px solid var(--ink);
+    border-radius: 6px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  }
+  .cover .callout { text-align: left; }
+
+  /* Headings */
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 4mm;
+    font-size: 19pt;
+    color: var(--ink);
+    margin: 0 0 6mm;
+    padding-bottom: 3mm;
+    border-bottom: 3px solid var(--blue);
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 10mm;
+    height: 10mm;
+    border-radius: 50%;
+    background: var(--blue);
+    color: white;
+    font-size: 14pt;
+  }
+  h3 { font-size: 14pt; color: var(--ink); margin: 8mm 0 4mm; }
+  ol, ul { padding-left: 7mm; }
+  li { margin-bottom: 2mm; }
+  code {
+    font-family: Consolas, monospace;
+    font-size: 10.5pt;
+    background: #f3f4f6;
+    padding: 0 1.5mm;
+    border-radius: 3px;
+  }
+
+  /* Screenshots and placeholders */
+  figure { margin: 5mm 0; }
+  .shot {
+    display: block;
+    width: 100%;
+    max-height: 105mm;
+    object-fit: contain;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+  }
+  figcaption {
+    text-align: center;
+    font-style: italic;
+    color: var(--muted);
+    font-size: 10pt;
+    margin-top: 2mm;
+  }
+
+  /* Callout boxes */
+  .callout {
+    border-left: 5px solid;
+    border-radius: 6px;
+    padding: 3mm 5mm;
+    margin: 4mm 0;
+    font-size: 10.5pt;
+  }
+  .callout .label {
+    display: block;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 9pt;
+  }
+  .word { background: #fef3c7; border-color: #d97706; }
+  .word .label { color: #92400e; }
+  .fact { background: #ecfdf5; border-color: #059669; }
+  .fact .label { color: #047857; }
+  .tip  { background: #eff6ff; border-color: var(--blue); }
+  .tip .label { color: var(--blue-dark); }
+  .uses { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 4mm 6mm; }
+  .uses .label { color: var(--blue-dark); text-transform: none; letter-spacing: 0; font-size: 11pt; }
+  .uses ul { margin: 2mm 0 0; }
+
+  /* Style table */
+  table { width: 100%; border-collapse: collapse; font-size: 10.5pt; margin: 4mm 0; }
+  th, td { border: 1px solid var(--border); padding: 2mm 3mm; text-align: left; }
+  th { background: #f3f4f6; }
+
+  /* Recap page */
+  .learned { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+  .learned div {
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
+    border-radius: 6px;
+    padding: 3mm 4mm;
+    font-size: 10.5pt;
+  }
+  .learned b { color: var(--blue); }
+  .try {
+    margin-top: 6mm;
+    border: 2px dashed #a855f7;
+    background: #fdf4ff;
+    border-radius: 8px;
+    padding: 4mm 6mm;
+  }
+  .try h3 { color: #7e22ce; margin: 0 0 2mm; }
+  .footer-note { text-align: right; color: #9ca3af; font-size: 9pt; margin-top: 5mm; }
+</style>
+</head>
+<body>
+
+<!-- Cover -->
+<section class="page cover">
+  <div class="kicker">A GIS Adventure: Exercise 2</div>
+  <h1>Famous Places of India</h1>
+  <p class="subtitle">Put landmarks on the map using GeoLibre</p>
+
+  <figure class="cover-figure">
+    <img class="shot" src="screenshot/s2.png" alt="A satellite map of Telangana with Charminar labelled">
+    <figcaption>An example of a famous place on a map. Yours will look different!</figcaption>
+  </figure>
+
+  <div class="callout uses">
+    <span class="label">What you'll use</span>
+    <ul>
+      <li><b>GeoLibre</b>: the same free, web-based GIS tool from Exercise 1</li>
+      <li><b>famous_places.csv</b>: a small table of 16 famous places, with their latitude and longitude</li>
+      <li><b>india_boundary.geojson</b>: the outline of India, from the Exercise 1 data folder</li>
+    </ul>
+  </div>
+</section>
+
+<!-- Intro -->
+<section class="page">
+  <h2>Every Place Has an Address on Earth</h2>
+  <p>Your home has a street address. But every spot on Earth also has a special
+    address made of two numbers, called <b>latitude</b> and <b>longitude</b>. With those
+    two numbers, a GIS can put a dot in exactly the right place on a map.</p>
+  <p>Today you'll take a simple table of famous places in India, like the Taj Mahal,
+    the Golden Temple, and Kaziranga National Park, and turn it into a map. Then
+    you'll explore the places and measure how far apart they are.</p>
+
+  <div class="callout word">
+    <span class="label">GIS word of the day</span>
+    <b>Latitude and longitude</b>: <i>latitude</i> tells you how far north or south of the
+    equator a place is. <i>Longitude</i> tells you how far east or west it is. Together
+    they are called <b>coordinates</b>.
+  </div>
+
+  <div class="callout fact">
+    <span class="label">Fun fact</span>
+    India sits entirely north of the equator, so every place in India has a positive
+    latitude. The southern tip of the mainland, Kanyakumari, is at about 8 degrees north.
+  </div>
+
+  <p>Here's the plan for today, in eight steps:</p>
+  <ol>
+    <li>Open GeoLibre and add the India outline</li>
+    <li>Look inside the table of places</li>
+    <li>Put the places on the map</li>
+    <li>Colour the dots by type of place</li>
+    <li>Write the place names on the map</li>
+    <li>Explore the places</li>
+    <li>Measure distances</li>
+    <li>Make a layout and export your map</li>
+  </ol>
+</section>
+
+<!-- Step 1 -->
+<section class="page">
+  <h2><span class="badge">1</span> Open GeoLibre and Add India</h2>
+  <p>First we need a map of India to put our places on. You already know how to do this!</p>
+  <ol>
+    <li>Open GeoLibre in your web browser and click <b>Launch GeoLibre Web</b>.</li>
+    <li>Click <b>Add Data</b>, choose <b>Vector Layer</b>, and pick
+      <b>india_boundary.geojson</b> from your Exercise 1 data folder.</li>
+    <li>In the <b>Style</b> panel, set the <b>Fill</b> to transparent and the
+      <b>Stroke</b> to dark grey, width <b>2</b>, just like in Exercise 1.</li>
+    <li>Pick a plain, light basemap. Our coloured dots will be easier to see on a
+      calm background.</li>
+  </ol>
+
+
+  <div class="callout tip">
+    <span class="label">Tip</span>
+    Forgot a step? Flip back to Exercise 1. Repeating a skill is how real mapmakers get fast.
+  </div>
+</section>
+
+<!-- Step 2 -->
+<section class="page">
+  <h2><span class="badge">2</span> Look Inside the Table</h2>
+  <p>Before we map anything, let's see what our data looks like.</p>
+  <ol>
+    <li>Find <b>famous_places.csv</b> in the Exercise 2 data folder and open it in
+      Notepad or Excel.</li>
+    <li>Each <b>row</b> is one place. Each <b>column</b> is one fact about it.</li>
+    <li>Find the <code>latitude</code> and <code>longitude</code> columns. These two
+      numbers are what put each place on the map.</li>
+    <li>Look at the <code>type</code> column. Every place is a <i>Monument</i>,
+      <i>Palace</i>, <i>Temple</i>, or <i>Nature</i> spot.</li>
+  </ol>
+
+  <table>
+    <tr><th>name</th><th>type</th><th>city</th><th>latitude</th><th>longitude</th></tr>
+    <tr><td>Taj Mahal</td><td>Monument</td><td>Agra</td><td>27.1751</td><td>78.0421</td></tr>
+    <tr><td>Hawa Mahal</td><td>Palace</td><td>Jaipur</td><td>26.9239</td><td>75.8267</td></tr>
+    <tr><td>Golden Temple</td><td>Temple</td><td>Amritsar</td><td>31.6200</td><td>74.8765</td></tr>
+    <tr><td>Kaziranga National Park</td><td>Nature</td><td>Golaghat</td><td>26.5775</td><td>93.1711</td></tr>
+  </table>
+  <p style="text-align:center; color:#6b7280; font-size:10pt; font-style:italic; margin-top:0">
+    Four of the 16 rows in famous_places.csv. There's also a <code>state</code> and a
+    <code>fun_fact</code> column.</p>
+
+  <div class="callout fact">
+    <span class="label">Fun fact</span>
+    A CSV file is just plain text with commas between the values. CSV stands for
+    <b>Comma-Separated Values</b>. Open it in Notepad and you'll see the commas!
+  </div>
+</section>
+
+<!-- Step 3 -->
+<section class="page">
+  <h2><span class="badge">3</span> Put the Places on the Map</h2>
+  <p>Now let's turn that table into dots on the map.</p>
+  <ol>
+    <li>Click <b>Add Data</b>. This time, under <b>Files</b>, choose
+      <b>Delimited Text Layer</b>.</li>
+    <li>Pick <b>famous_places.csv</b>.</li>
+    <li>Tell GeoLibre which columns hold the coordinates: <code>longitude</code> for
+      X (east-west) and <code>latitude</code> for Y (north-south).</li>
+    <li>Confirm. Sixteen dots pop up all over India!</li>
+  </ol>
+
+
+  <div class="callout word">
+    <span class="label">GIS word of the day</span>
+    <b>Point data</b>: places shown as single dots. In Exercise 1 you used shapes
+    (polygons) for the country; here each place is so small on a map of India that
+    one dot is enough.
+  </div>
+</section>
+
+<!-- Step 4 -->
+<section class="page">
+  <h2><span class="badge">4</span> Colour the Dots by Type</h2>
+  <p>All the dots look the same right now. Let's give each type of place its own colour.</p>
+  <ol>
+    <li>Click the <i>famous_places</i> layer in the Layers panel. The <b>Style</b>
+      panel opens on the right.</li>
+    <li>Change <b>Style type</b> to <b>Categorized</b>.</li>
+    <li>Set <b>Attribute</b> to <code>type</code>.</li>
+    <li>Choose a <b>Colormap</b> with bright, different colours and click
+      <b>Apply style type</b>.</li>
+    <li>Make the dots a little bigger so they're easy to spot, and give them a white outline.</li>
+  </ol>
+
+
+  <div class="callout word">
+    <span class="label">GIS word of the day</span>
+    <b>Categorized style</b>: sorting things into groups based on a column, and giving
+    each group its own colour. Here there are four groups, one for each type.
+  </div>
+</section>
+
+<!-- Step 5 -->
+<section class="page">
+  <h2><span class="badge">5</span> Name the Places</h2>
+  <p>Which dot is the Taj Mahal? Let's write the names on the map.</p>
+  <ol>
+    <li>With <i>famous_places</i> selected, find the <b>Labels</b> settings in the
+      Style panel.</li>
+    <li>Turn labels on and choose <code>name</code> as the label field.</li>
+    <li>Set the text colour to <b>black</b> and the size to about <b>12</b>.</li>
+    <li>Add a <b>white halo</b> about <b>1.5</b> wide, so the names are easy to read on
+      top of the map.</li>
+    <li>Zoom in on Delhi. The Red Fort and Qutub Minar are so close that their names
+      only separate when you zoom in.</li>
+  </ol>
+
+
+  <div class="callout word">
+    <span class="label">GIS word of the day</span>
+    <b>Label</b>: text placed on a map, taken straight from a column in the data.
+    Change the name in the table, and the label changes too.
+  </div>
+</section>
+
+<!-- Step 6 -->
+<section class="page">
+  <h2><span class="badge">6</span> Explore the Places</h2>
+  <p>Our map knows more than just names. Let's find the hidden facts.</p>
+  <ol>
+    <li>Open the <b>Layer actions</b> for <i>famous_places</i> and choose
+      <b>Open attribute table</b>. It's the same table as the CSV, now inside GeoLibre.</li>
+    <li>Click a row, for example <i>Hawa Mahal</i>. Its dot lights up on the map.</li>
+    <li>Scroll right to the <code>fun_fact</code> column and read it out loud!</li>
+    <li>Now <b>right-click</b> on the map near a place and choose <b>What's here?</b>
+      A card pops up with information from Wikipedia.</li>
+  </ol>
+
+
+  <div class="callout fact">
+    <span class="label">Fun fact</span>
+    Hawa Mahal means "Palace of Winds". It has 953 small windows, so the royal ladies
+    could watch the street below while staying cool and unseen.
+  </div>
+</section>
+
+<!-- Step 7 -->
+<section class="page">
+  <h2><span class="badge">7</span> How Far Is It?</h2>
+  <p>Maps are great for measuring. Let's find out how far apart some of our places are.</p>
+  <ol>
+    <li>Open <b>Controls</b> &rarr; <b>Measure</b> and pick <b>Distance</b>. Set the unit
+      to kilometres.</li>
+    <li>Click <b>Start</b>. Click once on the <b>Taj Mahal</b>, then double-click on
+      the <b>Gateway of India</b> to finish.</li>
+    <li>Read the distance. Write it down: ________ km</li>
+    <li>Click <b>Clear All</b>, then measure from the most northern place (the
+      <b>Golden Temple</b>) to the most southern place (<b>Meenakshi Temple</b>):
+      ________ km</li>
+  </ol>
+
+
+  <div class="callout word">
+    <span class="label">GIS word of the day</span>
+    <b>Straight-line distance</b>: the distance "as the crow flies", in a perfectly
+    straight line. Roads twist and turn, so a car trip is always longer.
+    <i>Check: you should get roughly 1,060 km and 2,430 km.</i>
+  </div>
+</section>
+
+<!-- Step 8 -->
+<section class="page">
+  <h2><span class="badge">8</span> Make a Layout and Export</h2>
+  <p>Time to turn your map into something you can print and show off.</p>
+  <ol>
+    <li>Open <b>Project</b> &rarr; <b>Print Layout...</b></li>
+    <li>Type <b>"Famous Places of India"</b> as the title.</li>
+    <li>Turn on the <b>north arrow</b>, the <b>scale bar</b>, and the <b>legend</b>. The
+      legend explains what each dot colour means.</li>
+    <li>Set the paper to <b>A4</b>, <b>Portrait</b>.</li>
+    <li>Export your map as a <b>PNG</b> image or a <b>PDF</b>.</li>
+  </ol>
+
+
+  <div class="callout word">
+    <span class="label">GIS word of the day</span>
+    <b>Legend</b>: the key to a map. It tells readers what each colour or symbol means.
+  </div>
+</section>
+
+<!-- Recap -->
+<section class="page">
+  <h2>Well Done, Explorer!</h2>
+  <p>You turned a plain table into a map, explored it, and measured real distances
+    across India. That's real GIS work!</p>
+
+  <h3>What You Learned</h3>
+  <div class="learned">
+    <div>Every place has <b>coordinates</b>: latitude and longitude</div>
+    <div>Turning a CSV table into <b>point data</b></div>
+    <div>Colouring points with a <b>categorized style</b></div>
+    <div>Writing names on a map with <b>labels</b></div>
+    <div>Reading facts in the <b>attribute table</b></div>
+    <div>Measuring <b>straight-line distance</b></div>
+  </div>
+
+  <div class="try">
+    <h3>Try It Yourself</h3>
+    <ul>
+      <li><b>Add your own place.</b> Right-click on your school or home in GeoLibre and
+        copy its coordinate. Add a new row to the CSV in Notepad, then load it again.
+        Is your dot in the right place?</li>
+      <li>Which two places on the map are closest together? Measure them to check.</li>
+      <li>Switch the basemap to <b>Google Satellite</b> and zoom right in on the Taj
+        Mahal. Can you see the white dome from space?</li>
+      <li>Pick your favourite place on the map and find three more facts about it.</li>
+    </ul>
+  </div>
+
+  <p class="footer-note">Made with GeoLibre &middot; mapping_with_kids / exercise2</p>
+</section>
+
+
+</body>
+</html>

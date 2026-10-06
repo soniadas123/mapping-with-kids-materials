@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Himalayas in 3D</title>
+<!--
+  Source for Himalayas_3D_Tutorial.pdf.
+  Rebuild the PDF from this folder with Edge (see README.md in the repo root).
+  No screenshots on purpose, so students explore on their own. The cover
+  picture is an inline SVG diagram.
+-->
+<style>
+  /* margin: 0 stops Edge from printing its own header and footer */
+  @page { size: A4; margin: 0; }
+
+  :root {
+    --blue: #2563eb;
+    --blue-dark: #1d4ed8;
+    --ink: #111827;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #d1d5db;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Verdana, Arial, sans-serif;
+    color: var(--text);
+    font-size: 11.5pt;
+    line-height: 1.6;
+  }
+
+  /* One A4 sheet per section */
+  .page {
+    width: 210mm;
+    height: 297mm;
+    padding: 18mm 18mm 16mm;
+    page-break-after: always;
+    overflow: hidden;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* Cover */
+  .cover { text-align: center; }
+  .kicker {
+    color: var(--blue);
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 10.5pt;
+    margin-top: 2mm;
+  }
+  .cover h1 { font-size: 32pt; color: var(--ink); margin: 3mm 0 1mm; line-height: 1.2; }
+  .subtitle { color: #4b5563; font-size: 13pt; margin: 0 0 8mm; }
+  .cover-figure { margin: 0 0 10mm; }
+  .cover .shot {
+    width: 100%;
+    max-height: none;
+    border: 4px solid var(--ink);
+    border-radius: 6px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  }
+  .cover .callout { text-align: left; }
+
+  /* Headings */
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 4mm;
+    font-size: 19pt;
+    color: var(--ink);
+    margin: 0 0 6mm;
+    padding-bottom: 3mm;
+    border-bottom: 3px solid var(--blue);
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 10mm;
+    height: 10mm;
+    border-radius: 50%;
+    background: var(--blue);
+    color: white;
+    font-size: 14pt;
+  }
+  h3 { font-size: 14pt; color: var(--ink); margin: 8mm 0 4mm; }
+  ol, ul { padding-left: 7mm; }
+  li { margin-bottom: 2mm; }
+  code {
+    font-family: Consolas, monospace;
+    font-size: 10.5pt;
+    background: #f3f4f6;
+    padding: 0 1.5mm;
+    border-radius: 3px;
+  }
+
+  /* Screenshots and placeholders */
+  figure { margin: 5mm 0; }
+  .shot {
+    display: block;
+    width: 100%;
+    max-height: 105mm;
+    object-fit: contain;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+  }
+  figcaption {
+    text-align: center;
+    font-style: italic;
+    color: var(--muted);
+    font-size: 10pt;
+    margin-top: 2mm;
+  }
+
+  /* Callout boxes */
+  .callout {
+    border-left: 5px solid;
+    border-radius: 6px;
+    padding: 3mm 5mm;
+    margin: 4mm 0;
+    font-size: 10.5pt;
+  }
+  .callout .label {
+    display: block;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 9pt;
+  }
+  .word { background: #fef3c7; border-color: #d97706; }
+  .word .label { color: #92400e; }
+  .fact { background: #ecfdf5; border-color: #059669; }
+  .fact .label { color: #047857; }
+  .tip  { background: #eff6ff; border-color: var(--blue); }
+  .tip .label { color: var(--blue-dark); }
+  .uses { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 4mm 6mm; }
+  .uses .label { color: var(--blue-dark); text-transform: none; letter-spacing: 0; font-size: 11pt; }
+  .uses ul { margin: 2mm 0 0; }
+
+  /* Style table */
+  table { width: 100%; border-collapse: collapse; font-size: 10.5pt; margin: 4mm 0; }
+  th, td { border: 1px solid var(--border); padding: 2mm 3mm; text-align: left; }
+  th { background: #f3f4f6; }
+
+  /* Recap page */
+  .learned { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+  .learned div {
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
+    border-radius: 6px;
+    padding: 3mm 4mm;
+    font-size: 10.5pt;
+  }
+  .learned b { color: var(--blue); }
+  .try {
+    margin-top: 6mm;
+    border: 2px dashed #a855f7;
+    background: #fdf4ff;
+    border-radius: 8px;
+    padding: 4mm 6mm;
+  }
+  .try h3 { color: #7e22ce; margin: 0 0 2mm; }
+  .footer-note { text-align: right; color: #9ca3af; font-size: 9pt; margin-top: 5mm; }
+  /* Cover diagram */
+  .cover .diagram {
+    display: block;
+    width: 100%;
+    border: 4px solid var(--ink);
+    border-radius: 6px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  }
+
+  /* Blank worksheet table for students to fill in */
+  .worksheet td { height: 10mm; }
+</style>
+</head>
+<body>
+
+<!-- Cover -->
+<section class="page cover">
+  <div class="kicker">A GIS Adventure: Exercise 4</div>
+  <h1>Himalayas in 3D</h1>
+  <p class="subtitle">Fly over the highest mountains on Earth using GeoLibre</p>
+
+  <figure class="cover-figure">
+    <svg class="diagram" viewBox="0 0 400 260" role="img" aria-label="The same mountains drawn flat, in normal 3D, and with the height stretched three times">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#dbeafe"/>
+          <stop offset="1" stop-color="#f8fafc"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="400" height="260" fill="url(#sky)"/>
+      <!-- 3x exaggerated -->
+      <polygon points="20,100 60,70 85,85 125,20 150,55 180,35 215,80 250,60 290,90 330,75 380,100"
+               fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="4 4" transform="translate(0,0)"/>
+      <!-- mountains, normal 3D -->
+      <polygon points="20,190 60,170 85,180 125,135 150,160 180,145 215,175 250,160 290,182 330,172 380,190 380,200 20,200"
+               fill="#6b8e5a" stroke="#3f5f34" stroke-width="1.5"/>
+      <polygon points="118,142 125,135 133,143 128,146" fill="white"/>
+      <polygon points="174,150 180,145 187,151" fill="white"/>
+      <!-- flat ground -->
+      <rect x="20" y="200" width="360" height="8" fill="#a3b18a"/>
+      <text x="200" y="232" text-anchor="middle" font-size="13" fill="#111827" font-weight="700">Turn on terrain, then stretch the heights</text>
+      <text x="335" y="60" text-anchor="middle" font-size="11" fill="#6b7280" font-style="italic">3x taller</text>
+      <text x="335" y="162" text-anchor="middle" font-size="11" fill="#3f5f34" font-style="italic">real 3D</text>
+    </svg>
+    <figcaption>Same mountains, two ways: real height, and height stretched three times.</figcaption>
+  </figure>
+
+  <div class="callout uses">
+    <span class="label">What you'll use</span>
+    <ul>
+      <li><b>GeoLibre</b>: the same free, web-based GIS tool from the earlier exercises</li>
+      <li><b>india_boundary.geojson</b>: the outline of India, from Exercise 1</li>
+      <li>No new data! GeoLibre loads the mountain heights by itself.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- Intro -->
+<section class="page">
+  <h2>The Earth Is Not Flat (Even on a Map)</h2>
+  <p>Every map you've made so far has been flat, like a sheet of paper. But the real
+    Earth has mountains, valleys, and plains. Today you'll switch on <b>3D terrain</b>
+    and see India's ground rise up off the screen.</p>
+  <p>We'll head to the <b>Himalayas</b>, the highest mountains on Earth, and find out
+    just how high they really are. Then you'll compare them with the place where
+    <i>you</i> live.</p>
+
+  <div class="callout word">
+    <span class="label">GIS word of the day</span>
+    <b>Elevation</b>: how high a place is above the level of the sea, usually measured
+    in metres. The beach is close to 0 m. The top of Mount Everest is 8,849 m.
+  </div>
+
+  <div class="callout fact">
+    <span class="label">Fun fact</span>
+    The heights GeoLibre shows were measured from space! A space shuttle and satellites bounced radar signals
+    off the ground to map the height of almost the whole planet. That's remote sensing,
+    just like in the intro.
+  </div>
+
+  <p>Here's the plan for today, in seven steps:</p>
+  <ol>
+    <li>Set up a satellite map</li>
+    <li>Turn on 3D terrain</li>
+    <li>Tilt and turn the map</li>
+    <li>Stretch the mountains</li>
+    <li>Find out how high things are</li>
+    <li>Measure up and down</li>
+    <li>Save your best view</li>
+  </ol>
+</section>
+
+<!-- Step 1 -->
+<section class="page">
+  <h2><span class="badge">1</span> Set Up a Satellite Map</h2>
+  <p>Mountains look best in a real photo from space.</p>
+  <ol>
+    <li>Open GeoLibre and click <b>Launch GeoLibre Web</b>.</li>
+    <li>Switch the basemap to <b>Google Satellite</b>, just like in Exercise 1.</li>
+    <li>Add <b>india_boundary.geojson</b> with a transparent fill and a bright outline,
+      like yellow, so it shows up against the mountains.</li>
+    <li>Zoom in on the top of India. Look for the white, wrinkled band of snow: those
+      are the Himalayas.</li>
+  </ol>
+
+  <div class="callout tip">
+    <span class="label">Tip</span>
+    From high above, the Himalayas look flat, like a painting. Keep that in mind; it's
+    about to change!
+  </div>
+</section>
+
+<!-- Step 2 -->
+<section class="page">
+  <h2><span class="badge">2</span> Turn On 3D Terrain</h2>
+  <p>Now let's give the map real height.</p>
+  <ol>
+    <li>Open the <b>Controls</b> menu and turn on <b>Terrain</b>.</li>
+    <li>Look at the map. Did anything change? Probably not much yet! When you look
+      straight down from above, mountains still look flat.</li>
+    <li>That's because we need to look from the side. That's the next step.</li>
+  </ol>
+
+  <div class="callout word">
+    <span class="label">GIS word of the day</span>
+    <b>Terrain</b>: the shape of the land: its hills, mountains, valleys, and plains.
+    A GIS stores terrain as a grid of elevation numbers, one for each small square of
+    ground. This kind of grid is called a <b>DEM</b> (Digital Elevation Model).
+  </div>
+
+  <div class="callout fact">
+    <span class="label">Fun fact</span>
+    A DEM is a type of <b>raster</b> data, the grid-of-squares kind you read about in
+    Exercise 1. Instead of colours, each square holds a height.
+  </div>
+</section>
+
+<!-- Step 3 -->
+<section class="page">
+  <h2><span class="badge">3</span> Tilt and Turn the Map</h2>
+  <p>Time to stop looking down like a bird and start looking across like a pilot.</p>
+  <ol>
+    <li><b>Tilt:</b> hold <b>Ctrl</b> and drag the map up or down with your mouse (or
+      press <b>Shift</b> + <b>&uarr;</b> / <b>&darr;</b>). The mountains suddenly stand up!</li>
+    <li><b>Turn:</b> hold the <b>right mouse button</b> and drag left or right (or press
+      <b>Shift</b> + <b>&larr;</b> / <b>&rarr;</b>) to spin around the mountains.</li>
+    <li>Zoom in on a big peak and walk around it by turning slowly.</li>
+    <li>Lost? Click the <b>compass</b> to point north again.</li>
+  </ol>
+
+  <div class="callout word">
+    <span class="label">GIS word of the day</span>
+    <b>Perspective view</b>: looking at the map at an angle, like from an aeroplane
+    window, instead of straight down. Things far away look smaller, just like in real life.
+  </div>
+
+  <div class="callout tip">
+    <span class="label">Tip</span>
+    Try finding where the mountains suddenly stop and the flat plains begin. That sharp
+    edge runs right across the north of India.
+  </div>
+</section>
+
+<!-- Step 4 -->
+<section class="page">
+  <h2><span class="badge">4</span> Stretch the Mountains</h2>
+  <p>Even the Himalayas can look a bit small from far away. GIS can make them taller,
+    just for looking.</p>
+  <ol>
+    <li><b>Double-click</b> the <b>Terrain</b> control to open its setting.</li>
+    <li>Set the vertical exaggeration to <b>2</b>. Every mountain is now drawn twice as tall.</li>
+    <li>Try <b>3</b>, then <b>5</b>. How do the mountains look now?</li>
+    <li>Look at a flat area, like the plains near the Ganga river. Does stretching
+      change it much? Why not?</li>
+    <li>Set it back to <b>1</b> to see the true shape again.</li>
+  </ol>
+
+  <div class="callout word">
+    <span class="label">GIS word of the day</span>
+    <b>Vertical exaggeration</b>: stretching heights to make the shape of the land
+    easier to see. It's useful, but remember: it isn't how the land really looks!
+  </div>
+
+  <div class="callout fact">
+    <span class="label">Fun fact</span>
+    Stretching flat land does almost nothing. Two times zero is still zero! That's why
+    the plains stay flat while the mountains shoot up.
+  </div>
+</section>
+
+<!-- Step 5 -->
+<section class="page">
+  <h2><span class="badge">5</span> How High Is It?</h2>
+  <p>Let's read the actual heights from the map.</p>
+  <ol>
+    <li>Open the <b>Controls</b> menu and turn on <b>Elevation</b>.</li>
+    <li>Move your mouse over the map. The height of the ground under your pointer appears
+      in the <b>status bar</b> at the bottom of the screen.</li>
+    <li>Find each place below, read its height, and write it in the table. Then add two
+      places of your own choice.</li>
+  </ol>
+
+  <table class="worksheet">
+    <tr><th style="width:38%">Place</th><th style="width:26%">Your reading</th><th>Real height</th></tr>
+    <tr><td>Kangchenjunga (Sikkim), India's highest peak</td><td></td><td>8,586 m</td></tr>
+    <tr><td>Nanda Devi (Uttarakhand)</td><td></td><td>7,816 m</td></tr>
+    <tr><td>Mount Everest (Nepal)</td><td></td><td>8,849 m</td></tr>
+    <tr><td>Varanasi, on the Ganga plains</td><td></td><td>about 80 m</td></tr>
+    <tr><td>Bangalore, on the Deccan plateau</td><td></td><td>about 920 m</td></tr>
+    <tr><td>Your choice: ______________</td><td></td><td></td></tr>
+    <tr><td>Your choice: ______________</td><td></td><td></td></tr>
+  </table>
+
+  <div class="callout tip">
+    <span class="label">Tip</span>
+    Your readings may be a bit lower than the real heights for the sharp peaks. The DEM
+    squares are wide, so each one shows an average height, and the very tip of a peak
+    gets smoothed out.
+  </div>
+</section>
+
+<!-- Step 6 -->
+<section class="page">
+  <h2><span class="badge">6</span> Measure Up and Down</h2>
+  <p>In Exercise 2 you measured distances on a flat map. With terrain on, GeoLibre can
+    measure along the ups and downs of the ground too.</p>
+  <ol>
+    <li>Make sure <b>Terrain</b> is still on.</li>
+    <li>Open <b>Controls</b> &rarr; <b>Measure</b> and choose <b>Distance</b>.</li>
+    <li>Click <b>Start</b>, then click a path across a mountain range: from a valley, over
+      a ridge, and down into the next valley. Double-click to finish.</li>
+    <li>Compare the normal distance with the <b>Terrain (3D)</b> distance.</li>
+    <li>Now measure a path of the same length across the flat Ganga plains. Is the
+      difference bigger or smaller?</li>
+  </ol>
+
+  <p>Mountain path: flat ________ km, 3D ________ km
+    &nbsp;&nbsp;&nbsp; Plains path: flat ________ km, 3D ________ km</p>
+
+  <div class="callout fact">
+    <span class="label">Fun fact</span>
+    Walking up and down mountains really is longer than the map says. That's one reason
+    a 20 km trek in the Himalayas can take a whole day!
+  </div>
+</section>
+
+<!-- Step 7 -->
+<section class="page">
+  <h2><span class="badge">7</span> Save Your Best View</h2>
+  <p>Find your favourite mountain view and share it.</p>
+  <ol>
+    <li>Pick a peak, valley, or river you like. Tilt and turn until the view looks amazing.</li>
+    <li>Try <b>Controls</b> &rarr; <b>Sun</b> and change the time of day. Watch the shadows
+      stretch across the mountains at sunrise and sunset.</li>
+    <li>Open <b>Project</b> &rarr; <b>Print Layout...</b>, give your map a title, like
+      <b>"Above the Himalayas"</b>, and add a north arrow.</li>
+    <li>Export it as a <b>PNG</b> image.</li>
+  </ol>
+
+  <div class="callout tip">
+    <span class="label">Tip</span>
+    A scale bar doesn't work well on a tilted 3D view, because things near you look bigger
+    than things far away. That's why we only add a north arrow this time.
+  </div>
+</section>
+
+<!-- Recap -->
+<section class="page">
+  <h2>You Explored the Roof of the World!</h2>
+  <p>You turned a flat map into a 3D landscape, measured real mountain heights, and saw
+    why walking in the mountains takes so long.</p>
+
+  <h3>What You Learned</h3>
+  <div class="learned">
+    <div>Every place has an <b>elevation</b> above sea level</div>
+    <div>The shape of the land is called <b>terrain</b>, stored in a <b>DEM</b></div>
+    <div>Looking at the map from the side in <b>perspective view</b></div>
+    <div>Making shapes easier to see with <b>vertical exaggeration</b></div>
+    <div>Reading heights from the map</div>
+    <div>Measuring distance along the ground in <b>3D</b></div>
+  </div>
+
+  <div class="try">
+    <h3>Try It Yourself</h3>
+    <ul>
+      <li>Follow the Ganga river upstream from the plains into the mountains. Can you find
+        where it starts, near Gangotri?</li>
+      <li>Fly down to the Western Ghats along India's west coast. How high are they
+        compared with the Himalayas?</li>
+      <li>Try <b>Controls</b> &rarr; <b>Flight Simulator</b> and fly through a mountain valley.</li>
+      <li>Use <b>Record Map Tour</b> to make a short video flying over your favourite peaks.</li>
+    </ul>
+  </div>
+
+  <p class="footer-note">Made with GeoLibre &middot; mapping_with_kids / exercise4</p>
+</section>
+
+</body>
+</html>
